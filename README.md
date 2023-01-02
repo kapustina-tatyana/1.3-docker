@@ -33,6 +33,12 @@
 
 ## Задание 1
 
+Для выполнения задания переместимся в папку nginx:
+```shell
+cd ./nginx
+```
+В папке находится [Dockerfile](nginx/Dockerfile), запускаем создание и выполнение контейнер:
+
 ```shell
 tatyanix@tatyanix-toshiba:~/PycharmProjects/1.3-docker/nginx$ docker build -t netology-nginx .
 Sending build context to Docker daemon  3.584kB
@@ -65,11 +71,16 @@ docker run --name netology-nginx-server2 -d --volume "$PWD/PycharmProjects/1.3-d
 
 ## Задание 2
 
+Для выполнения задания переместимся в папку python:
+```shell
+cd ./python
+```
+В [Dockerfile](python/Dockerfile) описано 2 контейнера, первый подготовительный скачивает [проект](https://github.com/kapustina-tatyana/3.2-stock_product_docker) из git, второй на основе образа python:3.9 копирует подготовленный [проект](https://github.com/kapustina-tatyana/3.2-stock_product_docker) и запускает его.
 <details>
   <summary>Листинг создания образа и запуска контейнера (кликабельно)</summary></summary>
 
 ```shell
-tatyanix@tatyanix-toshiba:~/PycharmProjects/1.3-docker/python$ docker build . --tag stock_product:0.0.1
+tahttps://github.com/kapustina-ttyanix@tatyanix-toshiba:~/PycharmProjects/1.3-docker/python$ docker build . --tag stock_product:0.0.1
 Sending build context to Docker daemon  2.048kB
 Step 1/13 : FROM alpine as pull_git
  ---> 49176f190c7e
@@ -224,8 +235,10 @@ CONTAINER ID   IMAGE                 COMMAND                  CREATED         ST
 50a57ef83a11   stock_product:0.0.1   "gunicorn --bind 0.0…"   8 minutes ago   Up 8 minutes   0.0.0.0:8003->8000/tcp, :::8003->8000/tcp   my_stockproducts
 ```
 
+Проверим работу api с помощью [requests-examples.http](https://github.com/kapustina-tatyana/3.2-stock_product_docker/blob/main/requests-examples.http)
+
 ![img_2.png](img_2.png)
-Единственный минус такого решения, pull_git образ не видит, произошли ли изменения в гит, поэтому при создании новой версии приложения из git, требуется выполнить команду:
+Единственный минус такого решения, pull_git образ не видит, произошли ли изменения в гит-репозитории, поэтому для создания новой версии приложения из git, требуется выполнить команду:
 
 ```shell
 docker image prune
@@ -235,9 +248,9 @@ docker image prune
 docker rmi alpine:latest
 ```
 
-если и это нежелательно, т.к. при последующем билде
+если и это нежелательно, т.к. при последующем билде образ будет скачен заново и в нем опять будет установлен git.
 
-или внести изменения в команду 
+То внести изменения в команду:
 
 ```shell
 RUN echo "version 0.0.1"
